@@ -5,8 +5,9 @@
 オリジン = 通信プロトコル + ドメイン + ポート番号<br>
 
 ## 環境構築
-クロスオリジン間でクッキーを送信する場合はlocalhost又はipだと何故か送信されない。<br>
-ローカルで実行する際はhosts等でフォワーディングする事<br>
+client(localhost)、server(プライベートip)で動かすと何故かクッキーが送信されない。<br>
+hosts等でフォワーディングしたらクッキー送信できた。<br>
+clientとserverともにlocalhostなら送信できた。<br>
 #### C:\Windows\System32\drivers\etc\hosts
 ```
 127.0.0.1 localhost.test.com
@@ -24,9 +25,6 @@ $ python3 server.py
 ```
 
 ## 思ったこと
-localでクロスオリジン環境の設定がめんどくさい。<br>
-ローカルだとなんかよくわからんけど動かんみたいな事があってステージング環境がほしい！ってなった。<br>
-フロント、バックエンドを切り離すと意識する事が多そうで大変<br>
 spa用のapiならsamesite=Noneでよさそう。Laxだとpost時にクッキー内のtokenが使えないから<br>
 リダイレクトレスポンスでリクエスト元を指定するとcorsで怒られるのが謎。<br>
 <img src="https://user-images.githubusercontent.com/72111956/147396385-7cf0185c-1b59-4173-8f5f-07a7c214e89b.png">

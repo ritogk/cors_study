@@ -33,7 +33,7 @@ spa用のapiならsamesite=Noneでよさそう。Laxだとpost時にクッキー
 <img src="https://user-images.githubusercontent.com/72111956/147396385-7cf0185c-1b59-4173-8f5f-07a7c214e89b.png">
 
 # 参考サイト
-https://qiita.com/att55/items/2154a8aad8bf1409db2b
-https://www.tohoho-web.com/ex/same-origin-policy.html
-https://ja.javascript.info/fetch-crossorigin
-https://dev.to/lydiahallie/cs-visualized-cors-5b8h
+https://qiita.com/att55/items/2154a8aad8bf1409db2b<br>
+https://www.tohoho-web.com/ex/same-origin-policy.html<br>
+https://ja.javascript.info/fetch-crossorigin<br>
+https://dev.to/lydiahallie/cs-visualized-cors-5b8h<br>

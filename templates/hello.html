@@ -1,0 +1,58 @@
+<html>
+    <head>
+    </head>
+    <body>
+        yahooo
+    </body>
+</html>
+
+<script>
+    // localhost or ipだと何故かクッキー送信できないのでhostでフォワーディングする事
+    serverOrigin = 'http://server.test.com:3000'
+
+    fetch(serverOrigin + '/api/helloworld', {
+        mode: 'cors',          //クロスオリジンリクエストをするのでCORSモードにする
+        credentials: 'include' //クレデンシャルを含める指定
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+
+
+    fetch(serverOrigin + '/api/post', {
+        mode: 'cors',
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+
+
+    fetch(serverOrigin + '/api/put', {
+        mode: 'cors',
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'X-Custom-Header': 'test',
+        },
+        body: JSON.stringify([1, 2, 3])
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+</script>

@@ -1,31 +1,40 @@
 from flask import Flask, jsonify, render_template, make_response, request
 app = Flask(__name__)
 import datetime
-# localhost or ipだと何故かクッキー送信できないのでhostでフォワーディングする事
+# サーバーとクライアントにはホスト名をつける事。
+# localhost or ipだと何故かクッキー送信できない？多分ドメインの書式じゃないから？
+# ローカルで実行する場合はhosts等でフォワーディングする
 clinet_origin = 'http://localhost.test.com:1000'
-# localhost or ipだと何故かクッキー送信できないのでhostでフォワーディングする事
 server_domain = 'server.test.com'
 
 ## api
 @app.route('/api/helloworld', methods=["GET"])
 def api():
     response = make_response(jsonify({'message': 'Hello world', 'coockie': request.cookies}))
-    # クレデンシャルが必要な場合は、オリジンに*はNG
+
+    # クレデンシャルが必要な場合はオリジンに「Access-Control-Allow-Origin = *」はNG
+    # 「Access-Control-Allow-Origin = *」は外部公開用api等で使いそう。
     response.headers.add('Access-Control-Allow-Origin', clinet_origin)
-    # response.headers.add('Access-Control-Allow-Headers', "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept")
-    response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
+    # 指定のhttpメソッドを許可
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
+    # クッキーと資格情報(なんの事？)の送信を許可
     response.headers.add('Access-Control-Allow-Credentials', 'true')
-    # SameSite
-    #   None:Cookieを送信する
+
+    # samesite
+    #   None:全ドメインに対してCookieを送信する
     #   Lax: 別ドメインからはPOST, ifram, XHR等のリクエストにクッキーがセットされない。
     #   Strict: 同一オリジンのリクエストのみクッキーを送信
+    #
+    #   spa用のapiならNoneでOK。Laxだとpost時にクッキー内のtokenが使えないから
+    #   samesiteの設定がゆるくても、corsの方で指定オリジンしかクッキーが使えない状態になってるだろうから多分OK
     # domain
     #   このオプションをしていないと同一ドメインからのみ利用可能なクッキーになる
     #   ブラウザがクッキーを送信するサーバーのドメイン名
     #   ここで設定された値と送信先のサーバーのドメインがマッチするときだけクライアントからクッキーを送信する
     #   少なくともドットが2つ必要
-    # サイドAから別ドメインのクッキーを書き込む = サードパーティークッキー
-    response.set_cookie("get", value='2511',
+    # httponly
+    #   javascriptからクッキーを読み込ませないためのオプション
+    response.set_cookie("get", value='25111',
                         httponly=True, samesite=None,
                         domain=server_domain, path='/')
     return response
@@ -35,9 +44,8 @@ def post():
     response = make_response(jsonify({'message': 'post', 'coockie': request.cookies}))
     response.headers.add('Access-Control-Allow-Origin', clinet_origin)
     response.headers.add('Origin', clinet_origin)
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorizations,X-Requested-With, X-HTTP-Method-Override')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
-    response.set_cookie("post", value='2', httponly=True, samesite='Lax',
+    response.set_cookie("post", value='2', httponly=True, samesite=None,
                         domain=server_domain, path='/')
     return response
 
@@ -45,11 +53,15 @@ def post():
 def put():
     response = make_response(jsonify({'message': 'put'}))
     response.headers.add('Access-Control-Allow-Origin', clinet_origin)
+    # 指定のhttpヘッダーを含んでいる。prefightリクエストを使う場合は必須
     response.headers.add('Access-Control-Allow-Headers', 'X-Custom-Header')
     response.headers.add('Access-Control-Allow-Methods', 'PUT, OPTIONS')
+    # prefightリクエストを何度も送らなくても良いよう。リクエストをキャッシュするオプション。時間を指定する
     response.headers.add('Access-Control-Max-Age', 1)
-    # 資格情報の送信に必要
     response.headers.add('Access-Control-Allow-Credentials', 'true')
+
+    response.set_cookie("put", value='aaa', httponly=True, samesite=None,
+                        domain=server_domain, path='/')
     return response
 
 ## おまじない

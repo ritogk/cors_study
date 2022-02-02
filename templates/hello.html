@@ -57,4 +57,19 @@
     .catch((error) => {
         console.error('Error:', error);
     });
+
+    // ■async await fetch
+    async function getHelloWorld(){
+        // ①res = レスポンスヘッダー
+        const res = await fetch(serverOrigin + '/api/helloworld', {
+            credentials: 'include'
+        });
+        // ②このタイミングではまだレスポンスヘッダーしか返ってきていない。
+
+        // ③data = レスポンスボディ
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
+    getHelloWorld();
 </script>

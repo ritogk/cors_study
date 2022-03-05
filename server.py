@@ -11,6 +11,14 @@ server_domain = 'server.test.com'
 @app.route('/api/helloworld', methods=["GET"])
 def api():
     response = make_response(jsonify({'message': 'Hello world', 'coockie': request.cookies}))
+    # 「Content-Type」が未指定の場合は、レスポンスボディの内容から自動的にContent-Typeが決まる
+    # IEとかだと「Content-Type」を指定していても勝手にファイルの内容からContent-Typeが書き換わる場合がある
+    # 「Content-Type」と「X-Content-Type-Options」をセットで設定しておく事で、Content-Typeの形式で固定するできる。
+    # レスポンスのjsonの中にjavascriptのコードが含まれている場合に、ブラウザが勝手にhtmlと認識する場合がある。そうなるとXSSができてしまう。。
+    # ヘッダーに上記２つを設定するだけでセキュリティーホールになる可能性を潰せるのでやっておくべき。コスパは良いと思う。
+    response.headers.set('Content-Type', 'aplication/json')
+    #「X-Content-Type-Options」レスポンスボディのファイル形式を「Content-Type」の内容から読み取るようにする設定
+    response.headers.add('X-Content-Type-Options', 'nosniff')
 
     # クレデンシャルが必要な場合はオリジンに「Access-Control-Allow-Origin = *」はNG
     # 「Access-Control-Allow-Origin = *」は外部公開用api等で使いそう。

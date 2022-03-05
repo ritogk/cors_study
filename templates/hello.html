@@ -1,75 +1,73 @@
 <html>
-    <head>
-    </head>
-    <body>
-        内容はないよう。
-        開発者ツールのネットワークを見てね。
-    </body>
+  <head> </head>
+  <body>
+    内容はないよう。 開発者ツールのネットワークを見てね。
+  </body>
 </html>
 
 <script>
-    // localhost or ipだと何故かクッキー送信できないのでhostでフォワーディングする事
-    serverOrigin = 'http://server.test.com:3000'
+  // localhost or ipだと何故かクッキー送信できないのでhostでフォワーディングする事
+  serverOrigin = "http://server.test.com:3000"
 
-    // ■GET
-    fetch(serverOrigin + '/api/helloworld', {
-        // クッキーを送信する場合は必ずinclude
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-
-
-    // ■POST
-    fetch(serverOrigin + '/api/post', {
-        method: 'POST',
-        // クッキーを送信する場合は必ずinclude
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
+  // ■GET
+  fetch(serverOrigin + "/api/helloworld", {
+    // クッキーを送信する場合は必ずinclude
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data)
     })
     .catch((error) => {
-        console.error('Error:', error);
-    });
-
-
-    // ■PUT
-    fetch(serverOrigin + '/api/put', {
-        // mode: 'cors',
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-            'X-Custom-Header': 'test',
-        },
-        body: JSON.stringify([1, 2, 3])
+      console.error("Error:", error)
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
+
+  // ■POST
+  fetch(serverOrigin + "/api/post", {
+    method: "POST",
+    // クッキーを送信する場合は必ずinclude
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data)
     })
     .catch((error) => {
-        console.error('Error:', error);
-    });
+      console.error("Error:", error)
+    })
 
-    // ■async await fetch
-    async function getHelloWorld(){
-        // ①res = レスポンスヘッダー
-        const res = await fetch(serverOrigin + '/api/helloworld', {
-            credentials: 'include'
-        });
-        // ②このタイミングではまだレスポンスヘッダーしか返ってきていない。
+  // ■PUT
+  fetch(serverOrigin + "/api/put", {
+    // mode: 'cors',
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-Custom-Header": "test",
+    },
+    body: JSON.stringify([1, 2, 3]),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data)
+    })
+    .catch((error) => {
+      console.error("Error:", error)
+    })
 
-        // ③data = レスポンスボディ
-        const data = await res.json();
-        console.log(data);
-        return data;
-    }
-    getHelloWorld();
+  // ■async await fetch
+  async function getHelloWorld() {
+    // ①res = レスポンスヘッダー
+    const res = await fetch(serverOrigin + "/api/helloworld", {
+      credentials: "include",
+    })
+    // ②このタイミングではまだレスポンスヘッダーしか返ってきていない。
+
+    // ③data = レスポンスボディ
+    const json = await res.json()
+    console.log(json)
+    return json
+  }
+  getHelloWorld()
+
+  async function getJson() {}
 </script>
